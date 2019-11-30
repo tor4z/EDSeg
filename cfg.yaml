@@ -1,0 +1,46 @@
+# hyper settings
+epochs: 200
+lr: 1.e-4
+batch_size: 16
+num_workers: 3
+shuffle: true
+resnet: resnet34
+sin_valid: 1
+gamma:  0.1
+devices:
+  # - 0
+  - 1
+  - 2
+  # - 3
+  # - 4
+  # - 5
+  # - 6
+  # - 7
+
+# dataset settings
+dataset: hela
+train_path: /data/cwj/HeLa/img
+label_path: null
+suffix: tif
+
+# checkpoint and visualize settings
+cache: 100
+saver_dir: storages
+summary_dir: runs
+disp_images: 5
+v_freq: 100
+
+# image settings
+image_x: 512
+image_y: 512
+image_chan: 1
+
+# resume settings
+resume: false
+resume_best: true
+resume_latest: false
+resume_epoch: null
+
+# runtime settings
+runtime_id: null
+force: false
