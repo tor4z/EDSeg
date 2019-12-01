@@ -13,26 +13,29 @@ class Saver(object):
 
     def __init__(self, opt):
         self.force = opt.force
-        self.dir = os.path.join(opt.saver_dir, opt.dataset, opt.runtime_id)
-        if os.path.exists(self.dir):
-            if self.force:
-                shutil.rmtree(self.dir)
+        self.enable = opt.saver_enable
+
+        if self.enable:
+            self.dir = os.path.join(opt.saver_dir, opt.dataset, opt.runtime_id)
+            if os.path.exists(self.dir):
+                if self.force:
+                    shutil.rmtree(self.dir)
+                else:
+                    raise RuntimeError('{} already exists.'.format(self.dir))
             else:
-                raise RuntimeError('{} already exists.'.format(self.dir))
-        else:
-            try:
-                os.makedirs(self.dir)
-            except Exception as e:
-                raise RuntimeError(str(e))
-        
-        self.best_filename = os.path.join(self.dir, self.BEST_FILE)
-        self.latest_filename = os.path.join(self.dir, self.LATEST_FILE)
-        self.config_filename = os.path.join(self.dir, self.CONFIG_FILE)
+                try:
+                    os.makedirs(self.dir)
+                except Exception as e:
+                    raise RuntimeError(str(e))
+            
+            self.best_filename = os.path.join(self.dir, self.BEST_FILE)
+            self.latest_filename = os.path.join(self.dir, self.LATEST_FILE)
+            self.config_filename = os.path.join(self.dir, self.CONFIG_FILE)
 
-        self.best_err = 1000000
+            self.best_err = 1000000
 
-        self.save_config(opt)
-        print('initialize saver')
+            self.save_config(opt)
+            print('initialize saver')
 
     def gen_checkpoint_filename(self, epoch):
         if epoch < 0:
@@ -46,6 +49,8 @@ class Saver(object):
         return path
 
     def save_checkpoint(self, state):
+        if not self.enable:
+            return
         epoch = state['epoch']
         err = state['err']
         path = self.gen_checkpoint_filename(epoch)
@@ -78,6 +83,8 @@ class Saver(object):
         return state
 
     def save_config(self, opt):
+        if not self.enable:
+            return
         cfg = opt.dump()
         self.save(cfg, self.config_filename)
 
@@ -97,6 +104,8 @@ class Saver(object):
         torch.save(obj, path)
 
     def load(self, obj, path):
+        if not self.enable:
+            raise RuntimeError('Saver not enabled.')
         self.check_dir(path)
         state = torch.load(obj, path)
         self.post_load(state)

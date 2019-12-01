@@ -14,8 +14,9 @@ class SingleValidation(object):
     def __init__(self, opt):
         self.valid = opt.sin_valid
         self.opt = opt
-
+        
         wild_filename = f'*.{opt.suffix}'
+
         self.images = sorted(glob.glob(os.path.join(opt.train_path, wild_filename)))
         if opt.label_path is not None:
             self.labels = sorted(glob.glob(os.path.join(opt.label_path, wild_filename)))

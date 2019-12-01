@@ -247,3 +247,18 @@ class RobertsLayer2D(nn.Module):
 
         self.roberts_b.weight.data = self.kernel_b
         self.roberts_b.weight.requires_grad = False
+
+
+class Discriminator(nn.Module):
+    def __init__(self, opt):
+        super(Discriminator, self).__init__()
+        self.base = resnet(opt)
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(512 * self.base.expansion, 1)
+
+    def forward(self, x):
+        _, _, _, c4 = self.base(x)
+        x = self.avgpool(c4)
+        x = torch.flatten(x, 1)
+        x = self.fc(x)
+        return x

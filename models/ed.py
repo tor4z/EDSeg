@@ -23,5 +23,5 @@ class EDSeg(nn.Module):
     def forward(self, x):
         c1, c2, c3, c4 = self.encoder(x)
         x = self.decoder(c1, c2, c3, c4)
-        x = self.gaussian(x)
+        # x = self.gaussian(x)
         return x
