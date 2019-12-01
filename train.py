@@ -18,9 +18,11 @@ def main(opt):
         train_dataloader = DataLoader(train,
                                 batch_size=opt.batch_size,
                                 num_workers=opt.num_workers,
+                                pin_memory=opt.pin_memory,
                                 shuffle=opt.shuffle)
         if valid:
-            valid_dataloader = DataLoader(valid, num_workers=opt.num_workers)
+            valid_dataloader = DataLoader(valid, num_workers=opt.num_workers,
+                                          pin_memory=opt.pin_memory)
         else:
             valid_dataloader = None
 

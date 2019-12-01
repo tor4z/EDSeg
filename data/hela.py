@@ -27,15 +27,16 @@ class Hela(Dataset):
             image = imread(image_path)
             self.images.append(image)
         
-        # Loading labels
-        print(f'Loading {self.labels_len} labels...')
-        iterator = tqdm(labels,
-                        leave=True,
-                        dynamic_ncols=True)
-        for i, label_path in enumerate(iterator):
-            iterator.set_description(f'Image[{i}/{self.labels_len}]')
-            label = imread(label_path)
-            self.labels.append(label)
+        if labels:
+            # Loading labels
+            print(f'Loading {self.labels_len} labels...')
+            iterator = tqdm(labels,
+                            leave=True,
+                            dynamic_ncols=True)
+            for i, label_path in enumerate(iterator):
+                iterator.set_description(f'Image[{i}/{self.labels_len}]')
+                label = imread(label_path)
+                self.labels.append(label)
 
     def __getitem__(self, index):
         image = self.images[index]

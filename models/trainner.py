@@ -11,6 +11,7 @@ class Trainner(object):
         self.opt = opt
         self.saver = saver
         self.summary = summary
+        self.global_steps = 0
         self.setup_models()
         print('initialize trainner')
 
@@ -34,7 +35,9 @@ class Trainner(object):
         self.schedule.step()
 
         if self.global_steps % self.opt.v_freq == 0:
+            lr = self.optimizer.param_groups[0]['lr']
             self.summary.add_scalar('loss', loss.item(), self.global_steps)
+            self.summary.add_scalar('lr', lr, self.global_steps)
             self.summary.train_image(images, output, labels, self.global_steps)
 
     def train_epoch(self, dataloader):
@@ -43,7 +46,7 @@ class Trainner(object):
                         dynamic_ncols=True)
         self.dataset_len = len(dataloader)
         for i, data in enumerate(iterator):
-            iterator.set_description(f'Epoch[{self.epoch}/{self.opt.epochs}]')
+            iterator.set_description(f'Epoch[{self.epoch}/{self.opt.epochs}|{self.global_steps}]')
             self.global_steps = self.epoch * self.dataset_len + i
 
             if isinstance(data, tuple):
@@ -87,6 +90,7 @@ class Trainner(object):
 
         mean_err = torch.tensor(errs).mean()
 
+        self.summary.add_scalar('validate_error', mean_err, self.global_steps)
         self.summary.val_image(images, output, labels, self.global_steps)
         self.save_checkpoint(mean_err)
 
