@@ -1,8 +1,8 @@
 # hyper parameters settings
-epochs: 200
-lrG: 1.e-3
-lrD: 1.e-4
-batch_size: 8
+epochs: 300
+lrG: 1.e-5
+lrD: 1.e-5
+batch_size: 4
 num_workers: 5
 shuffle: true
 pin_memory: true
@@ -31,7 +31,7 @@ suffix: tif
 saver_enable: false
 saver_dir: storages
 summary_dir: runs
-disp_images: 5
+disp_images: 4
 v_freq: 100
 
 # image settings
